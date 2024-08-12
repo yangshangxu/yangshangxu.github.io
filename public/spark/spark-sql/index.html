@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    
+    <title>Spark SQL | Note of Zebro Yang</title>
+    <meta name="viewport" content="width=device-width,minimum-scale=1">
+    <meta name="description" content="Spark SQL This doc is for spark-SQL study ^_^
+由SparkSqlParser中的AstBuilder执行节点访问，将语法树的各种Context节点转换成对应的LogicalPlan节点，从而成为一棵未解析的逻辑算子树(UnresolvedLogicalPlan)，此时的逻辑算子树是最初形态，不包含数据信息与列信息等 Context 节点是什么样的?
+Context 节点是ANTLR4生成的直接输出类,根据语法问价生成的.具体啥样看代码.需要熟悉ANTLR4的用法才能理解 LogicalPlan节点又是什么样的?
+**UnresolvedLogicalPlan** 不包含 数据信息 列信息 AstBuilder的注释原话
+The AstBuilder converts an ANTLR4 ParseTree into a catalyst Expression, LogicalPlan or TableIdentifier 入口
+override def parsePlan(sqlText: String): LogicalPlan = parse(sqlText) { parser =&gt; astBuilder.visitSingleStatement(parser.singleStatement()) match { case plan: LogicalPlan =&gt; plan case _ =&gt; val position = Origin(None, None) throw QueryParsingErrors.sqlStatementUnsupportedError(sqlText, position) } } 重点关注 parser.singleStatement() ANTLR的标准用法就是 paser.singleStatement().accept(visitor) ANTLR4 核心状态机">
+    <meta name="generator" content="Hugo 0.129.0">
+    
+    
+    
+    
+      <meta name="robots" content="noindex, nofollow">
+    
+    
+
+    
+<link rel="stylesheet" href="/ananke/css/main.min.css" >
+
+
+
+    
+
+    
+      
+
+    
+
+    
+
+    
+      <link rel="canonical" href="https://note.coeditor.love/spark/spark-sql/">
+    
+
+    <meta property="og:url" content="https://note.coeditor.love/spark/spark-sql/">
+  <meta property="og:site_name" content="Note of Zebro Yang">
+  <meta property="og:title" content="Spark SQL">
+  <meta property="og:description" content="Spark SQL This doc is for spark-SQL study ^_^
+由SparkSqlParser中的AstBuilder执行节点访问，将语法树的各种Context节点转换成对应的LogicalPlan节点，从而成为一棵未解析的逻辑算子树(UnresolvedLogicalPlan)，此时的逻辑算子树是最初形态，不包含数据信息与列信息等 Context 节点是什么样的?
+Context 节点是ANTLR4生成的直接输出类,根据语法问价生成的.具体啥样看代码.需要熟悉ANTLR4的用法才能理解 LogicalPlan节点又是什么样的?
+**UnresolvedLogicalPlan** 不包含 数据信息 列信息 AstBuilder的注释原话
+The AstBuilder converts an ANTLR4 ParseTree into a catalyst Expression, LogicalPlan or TableIdentifier 入口
+override def parsePlan(sqlText: String): LogicalPlan = parse(sqlText) { parser =&gt; astBuilder.visitSingleStatement(parser.singleStatement()) match { case plan: LogicalPlan =&gt; plan case _ =&gt; val position = Origin(None, None) throw QueryParsingErrors.sqlStatementUnsupportedError(sqlText, position) } } 重点关注 parser.singleStatement() ANTLR的标准用法就是 paser.singleStatement().accept(visitor) ANTLR4 核心状态机">
+  <meta property="og:locale" content="en_us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="spark">
+    <meta property="article:published_time" content="2024-07-19T23:33:57+08:00">
+    <meta property="article:modified_time" content="2024-07-19T23:33:57+08:00">
+
+  <meta itemprop="name" content="Spark SQL">
+  <meta itemprop="description" content="Spark SQL This doc is for spark-SQL study ^_^
+由SparkSqlParser中的AstBuilder执行节点访问，将语法树的各种Context节点转换成对应的LogicalPlan节点，从而成为一棵未解析的逻辑算子树(UnresolvedLogicalPlan)，此时的逻辑算子树是最初形态，不包含数据信息与列信息等 Context 节点是什么样的?
+Context 节点是ANTLR4生成的直接输出类,根据语法问价生成的.具体啥样看代码.需要熟悉ANTLR4的用法才能理解 LogicalPlan节点又是什么样的?
+**UnresolvedLogicalPlan** 不包含 数据信息 列信息 AstBuilder的注释原话
+The AstBuilder converts an ANTLR4 ParseTree into a catalyst Expression, LogicalPlan or TableIdentifier 入口
+override def parsePlan(sqlText: String): LogicalPlan = parse(sqlText) { parser =&gt; astBuilder.visitSingleStatement(parser.singleStatement()) match { case plan: LogicalPlan =&gt; plan case _ =&gt; val position = Origin(None, None) throw QueryParsingErrors.sqlStatementUnsupportedError(sqlText, position) } } 重点关注 parser.singleStatement() ANTLR的标准用法就是 paser.singleStatement().accept(visitor) ANTLR4 核心状态机">
+  <meta itemprop="datePublished" content="2024-07-19T23:33:57+08:00">
+  <meta itemprop="dateModified" content="2024-07-19T23:33:57+08:00">
+  <meta itemprop="wordCount" content="190">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Spark SQL">
+  <meta name="twitter:description" content="Spark SQL This doc is for spark-SQL study ^_^
+由SparkSqlParser中的AstBuilder执行节点访问，将语法树的各种Context节点转换成对应的LogicalPlan节点，从而成为一棵未解析的逻辑算子树(UnresolvedLogicalPlan)，此时的逻辑算子树是最初形态，不包含数据信息与列信息等 Context 节点是什么样的?
+Context 节点是ANTLR4生成的直接输出类,根据语法问价生成的.具体啥样看代码.需要熟悉ANTLR4的用法才能理解 LogicalPlan节点又是什么样的?
+**UnresolvedLogicalPlan** 不包含 数据信息 列信息 AstBuilder的注释原话
+The AstBuilder converts an ANTLR4 ParseTree into a catalyst Expression, LogicalPlan or TableIdentifier 入口
+override def parsePlan(sqlText: String): LogicalPlan = parse(sqlText) { parser =&gt; astBuilder.visitSingleStatement(parser.singleStatement()) match { case plan: LogicalPlan =&gt; plan case _ =&gt; val position = Origin(None, None) throw QueryParsingErrors.sqlStatementUnsupportedError(sqlText, position) } } 重点关注 parser.singleStatement() ANTLR的标准用法就是 paser.singleStatement().accept(visitor) ANTLR4 核心状态机">
+
+	
+  </head>
+
+  <body class="ma0 avenir bg-near-white">
+
+    
+   
+  
+
+  <header>
+    <div class="bg-black">
+      <nav class="pv3 ph3 ph4-ns" role="navigation">
+  <div class="flex-l justify-between items-center center">
+    <a href="/" class="f3 fw2 hover-white no-underline white-90 dib">
+      
+        Note of Zebro Yang
+      
+    </a>
+    <div class="flex-l items-center">
+      
+
+      
+      
+<div class="ananke-socials">
+  
+</div>
+
+    </div>
+  </div>
+</nav>
+
+    </div>
+  </header>
+
+
+
+    <main class="pb7" role="main">
+      
+  
+  <article class="flex-l flex-wrap justify-between mw8 center ph3">
+    <header class="mt4 w-100">
+      <aside class="instapaper_ignoref b helvetica tracked ttu">
+          
+        Sparks
+      </aside>
+      
+
+
+
+
+
+
+
+
+
+
+  <div id="sharing" class="mt3 ananke-socials">
+    
+  </div>
+
+
+      <h1 class="f1 athelas mt3 mb1">Spark SQL</h1>
+      
+      
+      
+      <time class="f6 mv4 dib tracked" datetime="2024-07-19T23:33:57+08:00">July 19, 2024</time>
+      
+
+      
+      
+    </header>
+    <div class="nested-copy-line-height lh-copy serif f4 nested-links mid-gray pr4-l w-two-thirds-l"><h1 id="spark-sql">Spark SQL</h1>
+<p>This doc is for <strong>spark-SQL</strong> study ^_^</p>
+<ol>
+<li>由SparkSqlParser中的AstBuilder执行节点访问，将语法树的各种Context节点转换成对应的LogicalPlan节点，从而成为一棵未解析的逻辑算子树(UnresolvedLogicalPlan)，此时的逻辑算子树是最初形态，不包含数据信息与列信息等</li>
+</ol>
+<blockquote>
+<p>Context 节点是什么样的?</p>
+</blockquote>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>Context 节点是ANTLR4生成的直接输出类,根据语法问价生成的.具体啥样看代码.需要熟悉ANTLR4的用法才能理解
+</span></span></code></pre></div><blockquote>
+<p>LogicalPlan节点又是什么样的?</p>
+</blockquote>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>**UnresolvedLogicalPlan** 不包含 数据信息 列信息
+</span></span></code></pre></div><blockquote>
+<p>AstBuilder的注释原话</p>
+</blockquote>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>The AstBuilder converts an ANTLR4 ParseTree into a catalyst Expression, LogicalPlan or TableIdentifier
+</span></span></code></pre></div><blockquote>
+<p>入口</p>
+</blockquote>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-scala" data-lang="scala"><span style="display:flex;"><span>  <span style="color:#66d9ef">override</span> <span style="color:#66d9ef">def</span> parsePlan<span style="color:#f92672">(</span>sqlText<span style="color:#66d9ef">:</span> <span style="color:#66d9ef">String</span><span style="color:#f92672">)</span><span style="color:#66d9ef">:</span> <span style="color:#66d9ef">LogicalPlan</span> <span style="color:#f92672">=</span> parse<span style="color:#f92672">(</span>sqlText<span style="color:#f92672">)</span> <span style="color:#f92672">{</span> parser <span style="color:#66d9ef">=&gt;</span>
+</span></span><span style="display:flex;"><span>    astBuilder<span style="color:#f92672">.</span>visitSingleStatement<span style="color:#f92672">(</span>parser<span style="color:#f92672">.</span>singleStatement<span style="color:#f92672">())</span> <span style="color:#66d9ef">match</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">case</span> plan<span style="color:#66d9ef">:</span> <span style="color:#66d9ef">LogicalPlan</span> <span style="color:#f92672">=&gt;</span> plan
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">case</span> <span style="color:#66d9ef">_</span> <span style="color:#66d9ef">=&gt;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">val</span> position <span style="color:#66d9ef">=</span> <span style="color:#a6e22e">Origin</span><span style="color:#f92672">(</span><span style="color:#a6e22e">None</span><span style="color:#f92672">,</span> <span style="color:#a6e22e">None</span><span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">throw</span> <span style="color:#a6e22e">QueryParsingErrors</span><span style="color:#f92672">.</span>sqlStatementUnsupportedError<span style="color:#f92672">(</span>sqlText<span style="color:#f92672">,</span> position<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  重点关注 parser<span style="color:#f92672">.</span>singleStatement<span style="color:#f92672">()</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">ANTLR的标准用法就是</span>
+</span></span><span style="display:flex;"><span>  paser<span style="color:#f92672">.</span>singleStatement<span style="color:#f92672">().</span>accept<span style="color:#f92672">(</span>visitor<span style="color:#f92672">)</span>
+</span></span></code></pre></div><blockquote>
+<p>ANTLR4 核心状态机</p>
+</blockquote>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">final</span> SingleStatementContext <span style="color:#a6e22e">singleStatement</span>() <span style="color:#66d9ef">throws</span> RecognitionException {
+</span></span><span style="display:flex;"><span>		SingleStatementContext _localctx <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> SingleStatementContext(_ctx, getState());
+</span></span><span style="display:flex;"><span>		enterRule(_localctx, 0, RULE_singleStatement);
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">int</span> _la;
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">try</span> {
+</span></span><span style="display:flex;"><span>			enterOuterAlt(_localctx, 1);
+</span></span><span style="display:flex;"><span>			{
+</span></span><span style="display:flex;"><span>			setState(286);
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e">// 核心状态转换 2000行!!!</span>
+</span></span><span style="display:flex;"><span>			statement();
+</span></span><span style="display:flex;"><span>			setState(290);
+</span></span><span style="display:flex;"><span>			_errHandler.<span style="color:#a6e22e">sync</span>(<span style="color:#66d9ef">this</span>);
+</span></span><span style="display:flex;"><span>			_la <span style="color:#f92672">=</span> _input.<span style="color:#a6e22e">LA</span>(1);
+</span></span><span style="display:flex;"><span>			<span style="color:#66d9ef">while</span> (_la<span style="color:#f92672">==</span>T__0) {
+</span></span><span style="display:flex;"><span>				{
+</span></span><span style="display:flex;"><span>				{
+</span></span><span style="display:flex;"><span>				setState(287);
+</span></span><span style="display:flex;"><span>				match(T__0);
+</span></span><span style="display:flex;"><span>				}
+</span></span><span style="display:flex;"><span>				}
+</span></span><span style="display:flex;"><span>				setState(292);
+</span></span><span style="display:flex;"><span>				_errHandler.<span style="color:#a6e22e">sync</span>(<span style="color:#66d9ef">this</span>);
+</span></span><span style="display:flex;"><span>				_la <span style="color:#f92672">=</span> _input.<span style="color:#a6e22e">LA</span>(1);
+</span></span><span style="display:flex;"><span>			}
+</span></span><span style="display:flex;"><span>			setState(293);
+</span></span><span style="display:flex;"><span>			match(EOF);
+</span></span><span style="display:flex;"><span>			}
+</span></span><span style="display:flex;"><span>		}
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">catch</span> (RecognitionException re) {
+</span></span><span style="display:flex;"><span>			_localctx.<span style="color:#a6e22e">exception</span> <span style="color:#f92672">=</span> re;
+</span></span><span style="display:flex;"><span>			_errHandler.<span style="color:#a6e22e">reportError</span>(<span style="color:#66d9ef">this</span>, re);
+</span></span><span style="display:flex;"><span>			_errHandler.<span style="color:#a6e22e">recover</span>(<span style="color:#66d9ef">this</span>, re);
+</span></span><span style="display:flex;"><span>		}
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">finally</span> {
+</span></span><span style="display:flex;"><span>			exitRule();
+</span></span><span style="display:flex;"><span>		}
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">return</span> _localctx;
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>_ctx始终表示正在解析的Context
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>初始状态:  parent <span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span>   state <span style="color:#f92672">=</span> <span style="color:#f92672">-</span>1   _ctx <span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">enterRule</span>(ParserRuleContext localctx, <span style="color:#66d9ef">int</span> state, <span style="color:#66d9ef">int</span> ruleIndex) {
+</span></span><span style="display:flex;"><span>    setState(state);
+</span></span><span style="display:flex;"><span>    _ctx <span style="color:#f92672">=</span> localctx;
+</span></span><span style="display:flex;"><span>    _ctx.<span style="color:#a6e22e">start</span> <span style="color:#f92672">=</span> _input.<span style="color:#a6e22e">LT</span>(1);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (_buildParseTrees) addContextToParseTree();
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> ( _parseListeners <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span>) triggerEnterRuleEvent();
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>调用后
+</span></span><span style="display:flex;"><span>_ctx <span style="color:#f92672">=</span> localctx <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> SingleStatementContext(_ctx, getState()); 
+</span></span><span style="display:flex;"><span>state <span style="color:#f92672">=</span> 0
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>          
+</span></span></code></pre></div><ul class="pa0">
+  
+</ul>
+<div class="mt6 instapaper_ignoref">
+      
+      
+      </div>
+    </div>
+
+    <aside class="w-30-l mt6-l">
+
+
+
+
+</aside>
+
+  </article>
+
+    </main>
+    <footer class="bg-black bottom-0 w-100 pa3" role="contentinfo">
+  <div class="flex justify-between">
+  <a class="f4 fw4 hover-white no-underline white-70 dn dib-ns pv2 ph3" href="https://note.coeditor.love/" >
+    &copy;  Note of Zebro Yang 2024 
+  </a>
+    <div>
+<div class="ananke-socials">
+  
+</div>
+</div>
+  </div>
+</footer>
+
+  </body>
+</html>
