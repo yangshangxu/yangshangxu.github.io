@@ -2,24 +2,24 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Note of Zebro Yang</title>
-    <link>http://localhost:1313/</link>
+    <link>https://note.coeditor.love/</link>
     <description>Recent content on Note of Zebro Yang</description>
     <generator>Hugo</generator>
     <language>en-us</language>
     <lastBuildDate>Mon, 12 Aug 2024 22:50:56 +0800</lastBuildDate>
-    <atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://note.coeditor.love/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Jellyfin</title>
-      <link>http://localhost:1313/movies/jellyfin/</link>
+      <link>https://note.coeditor.love/movies/jellyfin/</link>
       <pubDate>Mon, 12 Aug 2024 22:50:56 +0800</pubDate>
-      <guid>http://localhost:1313/movies/jellyfin/</guid>
+      <guid>https://note.coeditor.love/movies/jellyfin/</guid>
       <description>Jellyfin Server Deploy Using Docker docker pull jellyfin/jellyfin # mounted device docker run -d --volume /home/zebro/jellyfin/config:/config --volume /home/zebro/jellyfin/cache:/cache --volume /mnt/usb:/media --publish 8096:8096 jellyfin/jellyfin </description>
     </item>
     <item>
       <title>Spark SQL</title>
-      <link>http://localhost:1313/spark/spark-sql/</link>
+      <link>https://note.coeditor.love/spark/spark-sql/</link>
       <pubDate>Fri, 19 Jul 2024 23:33:57 +0800</pubDate>
-      <guid>http://localhost:1313/spark/spark-sql/</guid>
+      <guid>https://note.coeditor.love/spark/spark-sql/</guid>
       <description>Spark SQL This doc is for spark-SQL study ^_^&#xA;由SparkSqlParser中的AstBuilder执行节点访问，将语法树的各种Context节点转换成对应的LogicalPlan节点，从而成为一棵未解析的逻辑算子树(UnresolvedLogicalPlan)，此时的逻辑算子树是最初形态，不包含数据信息与列信息等 Context 节点是什么样的?&#xA;Context 节点是ANTLR4生成的直接输出类,根据语法问价生成的.具体啥样看代码.需要熟悉ANTLR4的用法才能理解 LogicalPlan节点又是什么样的?&#xA;**UnresolvedLogicalPlan** 不包含 数据信息 列信息 AstBuilder的注释原话&#xA;The AstBuilder converts an ANTLR4 ParseTree into a catalyst Expression, LogicalPlan or TableIdentifier 入口&#xA;override def parsePlan(sqlText: String): LogicalPlan = parse(sqlText) { parser =&amp;gt; astBuilder.visitSingleStatement(parser.singleStatement()) match { case plan: LogicalPlan =&amp;gt; plan case _ =&amp;gt; val position = Origin(None, None) throw QueryParsingErrors.sqlStatementUnsupportedError(sqlText, position) } } 重点关注 parser.singleStatement() ANTLR的标准用法就是 paser.singleStatement().accept(visitor) ANTLR4 核心状态机</description>
     </item>
   </channel>

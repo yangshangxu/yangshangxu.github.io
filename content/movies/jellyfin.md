@@ -1,7 +1,7 @@
 +++
 title = 'Jellyfin'
 date = 2024-08-12T22:50:56+08:00
-draft = true
+draft = false
 +++
 
 # Jellyfin Server Deploy Using Docker
