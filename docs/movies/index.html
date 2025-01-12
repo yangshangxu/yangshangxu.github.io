@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en-us">
-  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+  <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     
@@ -36,10 +36,10 @@
     
 
     
-      <link rel="canonical" href="http://localhost:1313/movies/">
+      <link rel="canonical" href="https://note.coeditor.love/movies/">
     
 
-    <meta property="og:url" content="http://localhost:1313/movies/">
+    <meta property="og:url" content="https://note.coeditor.love/movies/">
   <meta property="og:site_name" content="Note of Zebro Yang">
   <meta property="og:title" content="Movies">
   <meta property="og:locale" content="en_us">
@@ -106,7 +106,7 @@
       </a>
     </h1>
     <div class="nested-links f5 lh-copy nested-copy-line-height">
-      Jellyfin Server Deploy Using Docker docker pull jellyfin/jellyfin # mounted device docker run -d --volume /home/zebro/jellyfin/config:/config --volume /home/zebro/jellyfin/cache:/cache --volume /mnt/usb:/media --publish 8096:8096 jellyfin/jellyfin 
+      Jellyfin Server Deploy Using Docker # 有时候可能不是sdb1 你需要对比插拔硬盘前后/dev中的文件,看看你的硬盘到底是什么名字 mount /dev/sdb1 /mnt/usb docker pull jellyfin/jellyfin # mounted device docker run -d --volume /home/zebro/jellyfin/config:/config --volume /home/zebro/jellyfin/cache:/cache --volume /mnt/usb:/media --publish 8096:8096 jellyfin/jellyfin # add these rules in your machine , not docker, in your server sudo iptables -P FORWARD ACCEPT sudo iptables -A FORWARD -i docker0 -j ACCEPT sudo iptables -A FORWARD -o docker0 -j ACCEPT # 注意,这一步只是你服务器上的docker变成了wireguard中继,如果想让你的服务器能启动很多服务被其他VPN中的节点访问到,还需要把这台服务器配置成wireguard的一个客户端 # 注意 WG_HOST=124.78.9.226 为公网IP地址,会变的!!!! 222.64.64.155 docker run -d --name=wg -e WG_HOST=124.
     </div>
     <a href="/movies/jellyfin/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1">read more</a>
   </div>
@@ -119,8 +119,8 @@
     </main>
     <footer class="bg-black bottom-0 w-100 pa3" role="contentinfo">
   <div class="flex justify-between">
-  <a class="f4 fw4 hover-white no-underline white-70 dn dib-ns pv2 ph3" href="http://localhost:1313/" >
-    &copy;  Note of Zebro Yang 2024 
+  <a class="f4 fw4 hover-white no-underline white-70 dn dib-ns pv2 ph3" href="https://note.coeditor.love/" >
+    &copy;  Note of Zebro Yang 2025 
   </a>
     <div>
 <div class="ananke-socials">
