@@ -23,13 +23,18 @@ sudo iptables -A FORWARD -i docker0 -j ACCEPT
 sudo iptables -A FORWARD -o docker0 -j ACCEPT
 
 # 注意,这一步只是你服务器上的docker变成了wireguard中继,如果想让你的服务器能启动很多服务被其他VPN中的节点访问到,还需要把这台服务器配置成wireguard的一个客户端
+# 注意 WG_HOST=124.78.9.226  为公网IP地址,会变的!!!! 222.64.64.155
 docker run -d --name=wg -e WG_HOST=124.78.9.226 -e PASSWORD=passwd123 -e WG_DEFAULT_ADDRESS=10.0.8.x -e WG_DEFAULT_DNS=114.114.114.114 -e WG_ALLOWED_IPS=10.0.8.0/24 -e WG_PERSISTENT_KEEPALIVE=25 -v ~/.wg-easy:/etc/wireguard -p 51820:51820/udp -p 51821:51821/tcp --cap-add=NET_ADMIN --cap-add=SYS_MODULE --sysctl="net.ipv4.conf.all.src_valid_mark=1" --sysctl="net.ipv4.ip_forward=1" --restart unless-stopped weejewel/wg-easy
+
+docker run -d --name=wg -e WG_HOST=222.64.64.155 -e PASSWORD=passwd123 -e WG_DEFAULT_ADDRESS=10.0.8.x -e WG_DEFAULT_DNS=114.114.114.114 -e WG_ALLOWED_IPS=10.0.8.0/24 -e WG_PERSISTENT_KEEPALIVE=25 -v ~/.wg-easy:/etc/wireguard -p 51820:51820/udp -p 51821:51821/tcp --cap-add=NET_ADMIN --cap-add=SYS_MODULE --sysctl="net.ipv4.conf.all.src_valid_mark=1" --sysctl="net.ipv4.ip_forward=1" --restart unless-stopped weejewel/wg-easy
 
 
 # 配置ubuntu为wireguard客户端
 # 不能直接scp 到/etc目录下面,会没有权限,先scp到/tmp再mv过去
 scp -P 23333 /mnt/c/Users/Zebro/Desktop/server.conf zebro@192.168.1.106:/tmp/wg0.conf
-mv /tmp/wg0.conf /etc/wireguard/wg0.conf
+
+#去server上执行
+sudo mv /tmp/wg0.conf /etc/wireguard/wg0.conf
 
 #启动 客户端
 sudo wg-quick up wg0
@@ -130,7 +135,23 @@ sudo apt-get install docker-compose-plugin
 
 运行服务
 ```shell
-cd ~/nextcloud_docker
+cd /home/dev/nextcloud_docker
 docker compose up 
 docker logs -f nextcloud_core
+```
+
+修复日志
+```shell
+cd /home/dev/nextcloud_docker/app/config
+vi config.php
+修改
+'trusted_domains' =>
+  array (
+    0 => '10.0.8.3:8090',
+    1 => '192.168.1.106:8090',
+  ),
+
+并修改权限
+sudo chown -R www-data:www-data /home/dev/nextcloud_docker/app/config
+sudo chmod -R 755 /home/dev/nextcloud_docker/app/config
 ```
